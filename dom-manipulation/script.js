@@ -34,15 +34,34 @@ document.addEventListener('DOMContentLoaded', () => {
     const text = newQuoteText.value.trim();
     const category = newQuoteCategory.value.trim();
     if (text && category) {
-      quotes.push({ text, category });
+      const newQuote = { text, category };
+      quotes.push(newQuote);
       newQuoteText.value = '';
       newQuoteCategory.value = '';
       saveQuotes();
       populateCategories(); // Update the category filter
       alert('Quote added successfully!');
+      sendQuoteToServer(newQuote); // Send the new quote to the server
     } else {
       alert('Please enter both a quote and a category.');
     }
+  }
+
+  function sendQuoteToServer(quote) {
+    fetch(SERVER_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(quote)
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Quote sent to server:', data);
+    })
+    .catch(error => {
+      console.error('Error sending quote to server:', error);
+    });
   }
 
   function createAddQuoteForm() {
@@ -155,6 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Start periodic data sync with server
   periodicDataSync();
 });
+
 
 
 
