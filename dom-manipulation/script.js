@@ -8,6 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const importFileInput = document.getElementById('importFile');
   const categoryFilter = document.getElementById('categoryFilter');
 
+  const SERVER_URL = 'https://jsonplaceholder.typicode.com/posts';
+
   function showRandomQuote() {
     let filteredQuotes = quotes;
     if (selectedCategory !== 'all') {
@@ -112,6 +114,30 @@ document.addEventListener('DOMContentLoaded', () => {
     fileReader.readAsText(event.target.files[0]);
   }
 
+  async function fetchQuotesFromServer() {
+    try {
+      const response = await fetch(SERVER_URL);
+      const serverQuotes = await response.json();
+      if (response.ok) {
+        // Simulate conflict resolution by merging and giving precedence to server data
+        quotes = [...serverQuotes, ...quotes];
+        saveQuotes();
+        populateCategories();
+        showRandomQuote();
+        alert('Quotes synced with server successfully!');
+      } else {
+        console.error('Failed to fetch quotes from server.');
+      }
+    } catch (error) {
+      console.error('Error fetching quotes from server:', error);
+    }
+  }
+
+  function periodicDataSync() {
+    fetchQuotesFromServer();
+    setInterval(fetchQuotesFromServer, 60000); // Sync every 60 seconds
+  }
+
   newQuoteBtn.addEventListener('click', showRandomQuote);
   exportQuotesBtn.addEventListener('click', exportToJsonFile);
   importFileInput.addEventListener('change', importFromJsonFile);
@@ -125,6 +151,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Show a random quote on initial load
   showRandomQuote();
+
+  // Start periodic data sync with server
+  periodicDataSync();
 });
 
 
