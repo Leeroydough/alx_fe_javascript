@@ -1,17 +1,21 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const quotes = [
-    { text: "The best way to predict the future is to invent it.", category: "Inspiration" },
-    { text: "Life is 10% what happens to us and 90% how we react to it.", category: "Life" },
-    // Add more initial quotes if needed
-  ];
+  const quotes = JSON.parse(localStorage.getItem('quotes') || '[]');
 
   const quoteDisplay = document.getElementById('quoteDisplay');
   const newQuoteBtn = document.getElementById('newQuote');
 
   function showRandomQuote() {
+    if (quotes.length === 0) {
+      quoteDisplay.innerHTML = "No quotes available.";
+      return;
+    }
     const randomIndex = Math.floor(Math.random() * quotes.length);
     const randomQuote = quotes[randomIndex];
     quoteDisplay.innerHTML = `"${randomQuote.text}" - <em>${randomQuote.category}</em>`;
+  }
+
+  function saveQuotes() {
+    localStorage.setItem('quotes', JSON.stringify(quotes));
   }
 
   function addQuote() {
@@ -23,6 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
       quotes.push({ text, category });
       newQuoteText.value = '';
       newQuoteCategory.value = '';
+      saveQuotes();
       alert('Quote added successfully!');
     } else {
       alert('Please enter both a quote and a category.');
