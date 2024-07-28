@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
   let quotes = JSON.parse(localStorage.getItem('quotes') || '[]');
-  let lastSelectedCategory = localStorage.getItem('lastSelectedCategory') || 'all';
+  let selectedCategory = localStorage.getItem('selectedCategory') || 'all';
 
   const quoteDisplay = document.getElementById('quoteDisplay');
   const newQuoteBtn = document.getElementById('newQuote');
@@ -10,8 +10,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function showRandomQuote() {
     let filteredQuotes = quotes;
-    if (categoryFilter.value !== 'all') {
-      filteredQuotes = quotes.filter(quote => quote.category === categoryFilter.value);
+    if (selectedCategory !== 'all') {
+      filteredQuotes = quotes.filter(quote => quote.category === selectedCategory);
     }
     if (filteredQuotes.length === 0) {
       quoteDisplay.innerHTML = "No quotes available for this category.";
@@ -61,69 +61,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const addButton = document.createElement('button');
     addButton.id = 'addQuoteBtn';
     addButton.textContent = 'Add Quote';
-    addButton.addEventListener('click', addQuote);
-    formContainer.appendChild(addButton);
-    
-    document.body.appendChild(formContainer);
-  }
-
-  function populateCategories() {
-    const categories = [...new Set(quotes.map(quote => quote.category))];
-    categoryFilter.innerHTML = '<option value="all">All Categories</option>';
-    categories.forEach(category => {
-      const option = document.createElement('option');
-      option.value = category;
-      option.textContent = category;
-      categoryFilter.appendChild(option);
-    });
-    categoryFilter.value = lastSelectedCategory;
-  }
-
-  function filterQuotes() {
-    lastSelectedCategory = categoryFilter.value;
-    localStorage.setItem('lastSelectedCategory', lastSelectedCategory);
-    showRandomQuote();
-  }
-
-  function exportToJsonFile() {
-    const dataStr = JSON.stringify(quotes);
-    const blob = new Blob([dataStr], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-
-    const exportFileDefaultName = 'quotes.json';
-
-    const linkElement = document.createElement('a');
-    linkElement.setAttribute('href', url);
-    linkElement.setAttribute('download', exportFileDefaultName);
-    document.body.appendChild(linkElement);
-    linkElement.click();
-    document.body.removeChild(linkElement);
-  }
-
-  function importFromJsonFile(event) {
-    const fileReader = new FileReader();
-    fileReader.onload = function(event) {
-      const importedQuotes = JSON.parse(event.target.result);
-      quotes = [...quotes, ...importedQuotes];
-      saveQuotes();
-      populateCategories(); // Update the category filter
-      alert('Quotes imported successfully!');
-    };
-    fileReader.readAsText(event.target.files[0]);
-  }
-
-  newQuoteBtn.addEventListener('click', showRandomQuote);
-  exportQuotesBtn.addEventListener('click', exportToJsonFile);
-  importFileInput.addEventListener('change', importFromJsonFile);
-
-  // Initialize the form for adding new quotes
-  createAddQuoteForm();
-
-  // Populate category filter and set the last selected category
-  populateCategories();
-
-  // Show a random quote on initial load
-  showRandomQuote();
-});
+    addButton.addEventLis
 
 
