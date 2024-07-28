@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
       newQuoteText.value = '';
       newQuoteCategory.value = '';
       saveQuotes();
-      updateCategoryFilter();
+      populateCategories(); // Update the category filter
       alert('Quote added successfully!');
     } else {
       alert('Please enter both a quote and a category.');
@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.appendChild(formContainer);
   }
 
-  function updateCategoryFilter() {
+  function populateCategories() {
     const categories = [...new Set(quotes.map(quote => quote.category))];
     categoryFilter.innerHTML = '<option value="all">All Categories</option>';
     categories.forEach(category => {
@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const importedQuotes = JSON.parse(event.target.result);
       quotes = [...quotes, ...importedQuotes];
       saveQuotes();
-      updateCategoryFilter();
+      populateCategories(); // Update the category filter
       alert('Quotes imported successfully!');
     };
     fileReader.readAsText(event.target.files[0]);
@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
   createAddQuoteForm();
 
   // Populate category filter and set the last selected category
-  updateCategoryFilter();
+  populateCategories();
 
   // Show a random quote on initial load
   showRandomQuote();
