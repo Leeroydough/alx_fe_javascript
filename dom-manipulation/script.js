@@ -152,9 +152,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  async function syncQuotes() {
+    // Send all local quotes to the server
+    for (const quote of quotes) {
+      await sendQuoteToServer(quote);
+    }
+    // Fetch updated quotes from the server
+    await fetchQuotesFromServer();
+  }
+
   function periodicDataSync() {
-    fetchQuotesFromServer();
-    setInterval(fetchQuotesFromServer, 60000); // Sync every 60 seconds
+    syncQuotes();
+    setInterval(syncQuotes, 60000); // Sync every 60 seconds
   }
 
   newQuoteBtn.addEventListener('click', showRandomQuote);
@@ -174,6 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Start periodic data sync with server
   periodicDataSync();
 });
+
 
 
 
